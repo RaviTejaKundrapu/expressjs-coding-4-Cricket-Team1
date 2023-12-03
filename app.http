@@ -1,0 +1,43 @@
+//API 1 : Returns All Players
+
+GET http://localhost:3000/players/
+
+###
+
+//API 2 : Create a Player
+
+POST http://localhost:3000/players/
+Content-Type:application/json
+
+{
+  "playerName": "Vishal",
+  "jerseyNumber": 17,
+  "role": "Bowler"
+}
+
+###
+
+//API 3 : Return Player By player_id
+
+GET http://localhost:3000/players/2/
+
+###
+
+//API 4 : Update Player Details By id
+PUT http://localhost:3000/players/2
+Content-Type:application/json
+
+{
+  "playerName": "Vishal",
+  "jerseyNumber": 17,
+  "role": "Bowler"
+}
+
+###
+
+
+//API 5 : Delete Player By player_id
+
+DELETE http://localhost:3000/players/1
+
+###
