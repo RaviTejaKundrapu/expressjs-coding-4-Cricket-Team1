@@ -26,17 +26,32 @@ const initializeServerAndDb = async () => {
 
 initializeServerAndDb()
 
+//convert snake_case to camelCase
+
+const convertDbObjectToResponseObject = dbObject => {
+  return {
+    playerId: dbObject.player_id,
+    playerName: dbObject.player_name,
+    jerseyNumber: dbObject.jersey_number,
+    role: dbObject.role,
+  }
+}
+
 //API 1 : Returns All Players
 app.get('/players/', async (request, response) => {
-  const getAllPlayersQuery = `SELECT * FROM cricket_team ORDER BY player_id;`
-  const allPlayersArray = await db.all(getAllPlayersQuery)
-  response.send(allPlayersArray)
+  const getallplayersQuery = `SELECT * FROM cricket_team;`
+  const allPlayersArray = await db.all(getallplayersQuery)
+  response.send(
+    allPlayersArray.map(eachPlayer =>
+      convertDbObjectToResponseObject(eachPlayer),
+    ),
+  )
 })
 
 //API 2 : Create a Player
 app.post('/players/', async (request, response) => {
-  const playerDetails = request.body
-  const {playerName, jerseyNumber, role} = playerDetails
+  const givenplayerDetails = request.body
+  const {playerName, jerseyNumber, role} = givenplayerDetails
   const addPlayerQuery = `INSERT INTO cricket_team(player_name,jersey_number,role)
   VALUES(
     '${playerName}',
@@ -47,11 +62,11 @@ app.post('/players/', async (request, response) => {
   response.send('Player Added to Team')
 })
 //API 3 : Return Player By player_id
-app.get('/players/:playerId/', async (request, response) => {
+app.get('/players/:playerId', async (request, response) => {
   const {playerId} = request.params
-  const getPlayerByIdQuery = `SELECT * FROM cricket_team WHERE player_id=${playerId};`
-  const getplayerIdDb = await db.get(getPlayerByIdQuery)
-  response.send(getplayerIdDb)
+  const getPlayerQuery = `SELECT * FROM cricket_team WHERE player_id=${playerId};`
+  const getplayerIdDb = await db.get(getPlayerQuery)
+  response.send(convertDbObjectToResponseObject(getplayerIdDb))
 })
 
 //API 4 : Update Player Details By id
